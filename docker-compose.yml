@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  ipfs:
+    image: ipfs/kubo:release
+    restart: always
+    ports:
+      - "5001:5001"
+      - "8080:8080"
+  postgres:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: graph-node
+      POSTGRES_PASSWORD: letmein
+      POSTGRES_USER: graph-node
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+  graph-node:
+    image: graphprotocol/graph-node:v0.37.0
+    restart: always
+    ports:
+      - "8020:8020"
+      - "8000:8000"
+      - "8001:8001"
+      - "8030:8030"
+      - "8040:8040"
+    depends_on:
+      - ipfs
+      - postgres
+    environment:
+      postgres_host: postgres
+      postgres_user: graph-node
+      postgres_pass: letmein
+      postgres_db: graph-node
+      ipfs: 'ipfs:5001'
+      ethereum: 'arbitrum-sepolia:https://sepolia-rollup.arbitrum.io/rpc'
+      GRAPH_LOG: info

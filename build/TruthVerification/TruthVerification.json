@@ -1,0 +1,33 @@
+[
+  {
+    "inputs": [
+      {
+        "name": "eventHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "score",
+        "type": "uint256"
+      }
+    ],
+    "name": "QueryTruthScore",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "name": "eventHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "queryTruthScore",
+    "outputs": [
+      {
+        "name": "score",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

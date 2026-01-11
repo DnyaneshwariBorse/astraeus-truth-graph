@@ -1,0 +1,8 @@
+type TruthScore @entity(immutable: true) {
+  id: ID!
+  eventHash: Bytes!
+  score: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}
