@@ -1,12 +1,27 @@
 import { QueryTruthScore } from "../generated/TruthVerification/TruthVerification";
-import { TruthScore } from "../generated/schema";
+import { TruthScore, Verification } from "../generated/schema";
 
-export function handleTruthScore(event: QueryTruthScore): void {
-  let entity = new TruthScore(event.transaction.hash.toHex());
-  entity.eventHash = event.params.eventHash;
-  entity.score = event.params.score;
-  entity.timestamp = event.block.timestamp;
-  entity.blockNumber = event.block.number;
-  entity.transactionHash = event.transaction.hash;
-  entity.save();
+export function handleQueryTruthScore(event: QueryTruthScore): void {
+  let id = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+  let verification = new Verification(id);
+  
+  verification.queryHash = event.params.queryHash;
+  verification.score = event.params.score;
+  verification.blockNumber = event.block.number;
+  verification.save();
+
+  let scoreId = event.params.queryHash.toHex();
+  let truthScore = TruthScore.load(scoreId);
+  
+  if (truthScore == null) {
+    truthScore = new TruthScore(scoreId);
+    truthScore.user = event.transaction.from;
+    truthScore.score = event.params.score;
+    truthScore.timestamp = event.block.timestamp;
+  } else {
+    truthScore.score = event.params.score;
+    truthScore.timestamp = event.block.timestamp;
+  }
+  
+  truthScore.save();
 }

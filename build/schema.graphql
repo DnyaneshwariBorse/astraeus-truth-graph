@@ -1,8 +1,13 @@
-type TruthScore @entity(immutable: true) {
+type TruthScore @entity(immutable: false) {
   id: ID!
-  eventHash: Bytes!
+  user: Bytes!
   score: BigInt!
   timestamp: BigInt!
+}
+
+type Verification @entity(immutable: false) {
+  id: ID!
+  queryHash: Bytes!
+  score: BigInt!
   blockNumber: BigInt!
-  transactionHash: Bytes!
 }

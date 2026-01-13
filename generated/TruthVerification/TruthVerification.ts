@@ -23,7 +23,7 @@ export class QueryTruthScore__Params {
     this._event = event;
   }
 
-  get eventHash(): Bytes {
+  get queryHash(): Bytes {
     return this._event.parameters[0].value.toBytes();
   }
 
@@ -35,28 +35,5 @@ export class QueryTruthScore__Params {
 export class TruthVerification extends ethereum.SmartContract {
   static bind(address: Address): TruthVerification {
     return new TruthVerification("TruthVerification", address);
-  }
-
-  queryTruthScore(eventHash: Bytes): BigInt {
-    let result = super.call(
-      "queryTruthScore",
-      "queryTruthScore(bytes32):(uint256)",
-      [ethereum.Value.fromFixedBytes(eventHash)],
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_queryTruthScore(eventHash: Bytes): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "queryTruthScore",
-      "queryTruthScore(bytes32):(uint256)",
-      [ethereum.Value.fromFixedBytes(eventHash)],
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 }

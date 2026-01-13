@@ -51,8 +51,8 @@ export class TruthScore extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get eventHash(): Bytes {
-    let value = this.get("eventHash");
+  get user(): Bytes {
+    let value = this.get("user");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -60,8 +60,8 @@ export class TruthScore extends Entity {
     }
   }
 
-  set eventHash(value: Bytes) {
-    this.set("eventHash", Value.fromBytes(value));
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
   }
 
   get score(): BigInt {
@@ -89,6 +89,74 @@ export class TruthScore extends Entity {
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
   }
+}
+
+export class Verification extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Verification entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Verification must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("Verification", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Verification | null {
+    return changetype<Verification | null>(
+      store.get_in_block("Verification", id),
+    );
+  }
+
+  static load(id: string): Verification | null {
+    return changetype<Verification | null>(store.get("Verification", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get queryHash(): Bytes {
+    let value = this.get("queryHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set queryHash(value: Bytes) {
+    this.set("queryHash", Value.fromBytes(value));
+  }
+
+  get score(): BigInt {
+    let value = this.get("score");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set score(value: BigInt) {
+    this.set("score", Value.fromBigInt(value));
+  }
 
   get blockNumber(): BigInt {
     let value = this.get("blockNumber");
@@ -101,18 +169,5 @@ export class TruthScore extends Entity {
 
   set blockNumber(value: BigInt) {
     this.set("blockNumber", Value.fromBigInt(value));
-  }
-
-  get transactionHash(): Bytes {
-    let value = this.get("transactionHash");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set transactionHash(value: Bytes) {
-    this.set("transactionHash", Value.fromBytes(value));
   }
 }

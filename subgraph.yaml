@@ -6,19 +6,20 @@ dataSources:
     name: TruthVerification
     network: arbitrum-one
     source:
-      address: "0x364986D7f93Bc4F467461a2Cc03c7a5c8D6565b6"
+      address: "0x51cC02dB8052390645955CF39c1Ac55531131928"
       abi: TruthVerification
-      startBlock: 0
+      startBlock: 420786645
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - TruthScore
+        - Verification
       abis:
         - name: TruthVerification
           file: ./abis/TruthVerification.json
       eventHandlers:
-        - event: QueryTruthScore(bytes32,uint256)
-          handler: handleTruthScore
+        - event: QueryTruthScore(indexed bytes32,uint256)
+          handler: handleQueryTruthScore
       file: ./src/mapping.ts
